@@ -2,6 +2,8 @@
 
 **MadeForYou** is a static e-commerce website built using only HTML and CSS. It serves as a platform for selecting and gifting items for special occasions like birthdays, anniversaries, and celebrations. The site showcases a curated collection of gifts, cakes, flowers, and more — all designed to make someone feel special. The layout is clean and easy to use, making it simple for users to browse and choose the perfect gift.
 
+You can check the website here : https://typingxpert.netlify.app/
+
 ## 🌐 Technologies Used
 
 - **HTML5** – Semantic structure and content  
