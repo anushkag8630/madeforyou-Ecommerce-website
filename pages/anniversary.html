@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anniversary Gifts | MadeForYou</title>
+  <style>
+    html,body{
+    scrollbar-width: none;
+    overflow-x: hidden;
+}
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #aecfba, #f6e2b3, #a1d6e2);
+    }
+
+    .site-header {
+      background: #8ABF9E;
+      padding: 10px 20px;
+      font-family: 'Times New Roman', serif;
+      font-size: larger;
+      font-weight: bold;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .main-nav a {
+      color: #fff;
+      padding: 10px 15px;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .main-nav a:hover {
+      color: rgb(0, 69, 68);
+      text-decoration: underline;
+      transform: scale(1.05);
+    }
+
+    .main-nav .active {
+      font-weight: bold;
+      color: rgb(0, 69, 68);
+    }
+    
+    .sort-dropdown {
+      position: relative;
+      font-family: Arial, sans-serif;
+      color: #444;
+      background: white;
+      border-radius: 8px;
+      padding: 4px 6px;
+      cursor: pointer;
+      font-size: small;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      box-shadow: 0 10px 10px rgb(0 0 0 / 0.1);
+      margin-left: 40px;
+    }
+
+    .sort-dropdown label {
+      color: rgb(0, 69, 68);
+      user-select: none;
+    }
+
+    .sort-dropdown select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      border: none;
+      background: transparent;
+      padding: 2px 2px 2px;
+      cursor: pointer;
+      color: rgb(0, 69, 68);
+      font-weight: normal;
+      outline: none;
+      border-radius: 4px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sort-dropdown select::-ms-expand {
+      display: none;
+    }
+
+    .sort-dropdown::after {
+      content: "";
+      position: absolute;
+      right: 10px;
+      width: 12px;
+      height: 12px;
+      pointer-events: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="rgb(0,69,68)" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+        .hero {
+      background: url('../images/A1.png') center/cover no-repeat;
+      padding: 150px 20px 150px;
+      text-align: center;
+      color: #ffffff;
+      margin-top: 60px;
+    }
+
+    .hero h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+    }
+
+    .product-gallery {
+      padding: 10px 20px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      justify-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .product-card {
+      border: 1px solid #ddd;
+      padding: 15px;
+      text-align: center;
+      background: #fff;
+      border-radius: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .product-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .product-card .price {
+      font-size: 1.1em;
+      margin: 8px 0;
+      font-weight: bold;
+      color: #28a745;
+    }
+
+    .product-card .rating {
+      color: #f39c12;
+      margin-bottom: 10px;
+    }
+
+    .add-cart {
+      background: #28a745;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1em;
+      border-radius: 5px;
+      transition: background 0.2s;
+    }
+
+    .add-cart:hover {
+      background: #218838;
+    }
+
+    .site-footer {
+      background: #f8f8f8;
+      padding: 20px;
+      text-align: center;
+      font-size: 0.9em;
+    }
+
+    .footer-links a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #555;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="anniversary-page">
+  <header class="site-header">
+    <nav class="main-nav">
+      <a href="../index.html">HOME</a>
+      <a href="birthday.html">BIRTHDAY</a>
+      <a href="anniversary.html" class="active" target="_blank" rel="noopener noreferrer">ANNIVERSARY</a>
+      <a href="flowers.html">FLOWERS</a>
+      <a href="cakes.html">CAKES</a>
+      <a href="gifts.html">GIFTS</a>
+      <a href="personalised.html">PERSONALISED</a>
+      <a href="combos.html">COMBOS</a>
+
+      <div class="sort-dropdown" aria-label="Sort by filter">
+        <label for="sort-by">Sort by :</label>
+        <select id="sort-by" name="sort">
+          <option>Recommended</option>
+          <option>New</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+        </select>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <section class="hero">
+      <h1>Celebrate Your Love</h1>
+      <p>Make your anniversary unforgettable with our specially curated gifts and surprises.</p>
+    </section>
+
+    <section class="product-gallery">
+      <h2>Top Anniversary Picks</h2>
+      <div class="products-grid">
+        <div class="product-card">
+          <img src="../images/a1.jpg" alt="Rose Basket" />
+          <h3>Rose Basket</h3>
+          <p class="price">₹1,500</p>
+          <p class="rating">★★★★☆</p>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <img src="../images/a2.jpg" alt="Anniversary Cake" />
+          <h3>Anniversary Cake</h3>
+          <p class="price">₹1,000</p>
+          <p class="rating">★★★★☆</p>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <img src="../images/a3.jpg" alt="Personalized Photo Frame" />
+          <h3>Personalized Photo Frame</h3>
+          <p class="price">₹850</p>
+          <p class="rating">★★★★☆</p>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <img src="../images/a4.jpg" alt="Chocolate Box" />
+          <h3>Chocolate Box</h3>
+          <p class="price">₹700</p>
+          <p class="rating">★★★★★</p>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <img src="../images/a5.jpg" alt="Couple Ring" />
+          <h3>Couple Ring</h3>
+          <p class="price">₹1500</p>
+          <p class="rating">★★★★☆</p>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+        <div class="product-card">
+          <img src="../images/a6.jpg" alt="Anniversary Hamper" />
+          <h3>Anniversary Hamper</h3>
+          <p class="price">₹1,900</p>
+          <p class="rating">★★★★★</p>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="#">Terms & Conditions</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Contact Support</a>
+    </div>
+    <p>&copy; 2025 MadeForYou. All Rights Reserved.</p>
+  </footer>
+  <script src="../script2.js"></script>
+</body>
+</html>
