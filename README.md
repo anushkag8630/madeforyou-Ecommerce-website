@@ -13,9 +13,9 @@ You can check the website here : https://madeforyouu.netlify.app/
 
 MadeForYou/  
 ├── index.html              # Home page  
-├── products.html           # Product listings  
+├── profile.html           # Profile summary  
 ├── cart.html               # Shopping cart  
-├── checkout.html           # Checkout summary  
+├── login.html           # login summary  
 ├── css/  
 │   └── style.css           # Main stylesheet  
 ├── images/                 # Product and UI images  
