@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile - MadeForYou Gifts</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f9f9f9; }
+    h1, h2, h3 { margin: 0 0 10px 0; }
+    .profile-container { max-width: 900px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+    .user-info, .orders, .cart-overview { margin-bottom: 30px; }
+    .section-header { border-bottom: 2px solid #FF8400; padding-bottom: 5px; margin-bottom: 15px; color: #FF8400; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+    button { padding: 8px 15px; background: #FF8400; border: none; border-radius: 5px; color: white; cursor: pointer; }
+    button:hover { background: #e67300; }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <div class="user-info">
+      <h2 class="section-header">User Information</h2>
+      <p><strong>Name:</strong> <span id="user-name"></span></p>
+      <p><strong>Email:</strong> <span id="user-email"></span></p>
+      <button id="logout-btn">Logout</button>
+    </div>
+
+    <div class="orders">
+      <h2 class="section-header">Order History</h2>
+      <table id="order-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Items</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Orders will be added here dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cart-overview">
+      <h2 class="section-header">Cart Overview</h2>
+      <table id="cart-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Cart items will be added here dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const username = localStorage.getItem("username");
+      const email = localStorage.getItem("email");
+
+      // If not logged in → redirect to homepage
+      if (!username || !email) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      // Show user info
+      document.getElementById("user-name").textContent = username;
+      document.getElementById("user-email").textContent = email;
+
+      // Logout button
+      document.getElementById("logout-btn").addEventListener("click", () => {
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
+        window.location.href = "index.html";
+      });
+
+      // Get user-specific data
+      const cart = JSON.parse(localStorage.getItem(`${username}_cart`)) || [];
+      const orders = JSON.parse(localStorage.getItem(`${username}_orders`)) || [];
+
+      // Render order history
+      const orderTableBody = document.querySelector("#order-table tbody");
+      if (orders.length === 0) {
+        orderTableBody.innerHTML = `<tr><td colspan="4">No orders yet</td></tr>`;
+      } else {
+        orders.forEach(order => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${order.id}</td>
+            <td>${order.items.join(", ")}</td>
+            <td>₹${order.total}</td>
+            <td>${order.status}</td>
+          `;
+          orderTableBody.appendChild(tr);
+        });
+      }
+
+      // Render cart overview
+      const cartTableBody = document.querySelector("#cart-table tbody");
+      if (cart.length === 0) {
+        cartTableBody.innerHTML = `<tr><td colspan="4">Cart is empty</td></tr>`;
+      } else {
+        cart.forEach(item => {
+          const tr = document.createElement("tr");
+          const total = (item.price || 0) * (item.qty || 1);
+          tr.innerHTML = `
+            <td>${item.name}</td>
+            <td>₹${item.price}</td>
+            <td>${item.qty || 1}</td>
+            <td>₹${total}</td>
+          `;
+          cartTableBody.appendChild(tr);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

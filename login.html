@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guest Login - MadeForYou Gifts</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #8ABF9E;
+  position: relative;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Login Container */
+.login-container {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  text-align: center;
+  z-index: 10;
+}
+
+.login-container h2 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.login-container label {
+  display: block;
+  text-align: left;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #555;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.login-container input:focus {
+  border-color: #FF8400;
+  outline: none;
+  box-shadow: 0 0 8px rgba(255,132,0,0.3);
+}
+
+.login-container button {
+  width: 100%;
+  padding: 14px;
+  background-color: #FF8400;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.login-container button:hover:not(:disabled) {
+  background-color: #e67e00;
+}
+
+.login-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.back-home {
+  margin-top: 20px;
+}
+
+.back-home a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.back-home a:hover {
+  color: #FF8400;
+}
+
+.otp-section {
+  display: none;
+}
+
+#timer {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #FF8400;
+  font-weight: 600;
+}
+
+/* Message Box */
+#message {
+  margin-bottom: 15px;
+  font-weight: 600;
+  min-height: 22px;
+  transition: opacity 0.3s;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="login-container">
+  <h2>Guest Login</h2>
+  <form id="guest-login-form">
+    <div id="message"></div>
+
+    <label for="guest-name">Name <span style="color:red">*</span></label>
+    <input type="text" id="guest-name" placeholder="Enter your name" required>
+
+    <label for="guest-email">Email <span style="color:red">*</span></label>
+    <input type="email" id="guest-email" placeholder="Enter your email" required>
+
+    <button type="button" id="send-otp">Send OTP</button>
+    <div id="timer"></div>
+
+    <div class="otp-section" id="otp-section">
+      <label for="guest-otp">Enter OTP</label>
+      <input type="text" id="guest-otp" placeholder="Enter 6-digit OTP">
+      <button type="submit">Verify & Login</button>
+    </div>
+  </form>
+  <p class="back-home"><a href="index.html">← Back to Home</a></p>
+</div>
+
+<script>
+// Message helper
+const messageEl = document.getElementById("message");
+function showMessage(text, color = "green") {
+  messageEl.textContent = text;
+  messageEl.style.color = color;
+}
+
+// OTP Countdown
+let countdown;
+
+// --- Send OTP ---
+document.getElementById("send-otp").addEventListener("click", async () => {
+  const name = document.getElementById("guest-name").value.trim();
+  const email = document.getElementById("guest-email").value.trim();
+  const sendBtn = document.getElementById("send-otp");
+
+  if (!name || !email) {
+    showMessage("⚠️ Name and Email are required!", "red");
+    return;
+  }
+
+  try {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending OTP..."; // Show sending state
+    showMessage(""); // Clear previous messages
+
+    const res = await fetch("http://localhost:3000/send-otp-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      showMessage("✅ OTP sent to your email!", "green");
+      document.getElementById("otp-section").style.display = "block";
+
+      // Start 60-second timer
+      let timeLeft = 60;
+      const timerEl = document.getElementById("timer");
+      timerEl.textContent = `Resend OTP in ${timeLeft}s`;
+
+      countdown = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          timerEl.textContent = `Resend OTP in ${timeLeft}s`;
+        } else {
+          clearInterval(countdown);
+          timerEl.textContent = "";
+          sendBtn.disabled = false;
+          sendBtn.textContent = "Resend OTP";
+        }
+      }, 1000);
+
+    } else {
+      showMessage("❌ Failed to send OTP: " + data.msg, "red");
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Send OTP";
+    }
+  } catch (err) {
+    showMessage("Error: " + err.message, "red");
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Send OTP";
+  }
+});
+
+
+// --- Verify OTP & Login ---
+document.getElementById("guest-login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("guest-email").value.trim();
+  const otp = document.getElementById("guest-otp").value.trim();
+  const name = document.getElementById("guest-name").value.trim();
+
+  try {
+    const res = await fetch("http://localhost:3000/verify-otp-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem("username", name);
+      localStorage.setItem("email", email);
+      showMessage("✅ Login successful! Redirecting...", "green");
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500); // short delay before redirect
+    } else {
+      showMessage("❌ Invalid OTP!", "red");
+    }
+  } catch (err) {
+    showMessage("Error: " + err.message, "red");
+  }
+});
+
+// --- Background Particles ---
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 3 + 2;
+    this.speedX = (Math.random() - 0.5) * 0.8;
+    this.speedY = (Math.random() - 0.5) * 0.8;
+    const colors = ["rgba(255,255,255,0.8)","rgba(255,240,200,0.8)","rgba(255,220,150,0.8)"];
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+  }
+  update() {
+    this.x += this.speedX; 
+    this.y += this.speedY;
+    if(this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+    if(this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+}
+
+function init() {
+  particles = [];
+  for(let i=0; i<100; i++) particles.push(new Particle());
+}
+
+function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animate);
+}
+
+init();
+animate();
+
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  init();
+});
+</script>
+</body>
+</html>
