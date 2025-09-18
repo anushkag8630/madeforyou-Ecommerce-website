@@ -30,4 +30,4 @@ MadeForYou/
 - ✅ Themed sections for gifts, cakes, flowers, and more  
 
 ## 📌 Note
-This version is a **frontend-only** demo. There is no real backend or interactivity (like working cart or checkout logic).
+This version is a **frontend-only** demo. There is no real backend or interactivity (like checkout logic).
